@@ -20,6 +20,10 @@ a{color:var(--accent)}
 .flowbox{position:relative;background:#08202c;aspect-ratio:1280/560;max-width:100%;overflow:hidden}
 @media (max-width:640px){.flowbox{aspect-ratio:4/3.4}}
 .flowbox canvas{display:block;width:100%;height:100%}
+.flowbox{cursor:ew-resize;touch-action:pan-y}
+.hint{position:absolute;left:50%;top:10px;transform:translateX(-50%);font:.85rem var(--serif);color:#cfe3ea;background:rgba(5,20,25,.6);padding:3px 10px;border-radius:12px;pointer-events:none;white-space:nowrap}
+.hm{display:none}
+@media (max-width:640px){.hint{top:auto;bottom:10px;left:auto;right:12px;transform:none;font-size:.8rem}.hd{display:none}.hm{display:inline}}
 .flowtag{position:absolute;left:max(12px,env(safe-area-inset-left,0px));top:10px;font:.85rem var(--serif);color:#cfe3ea;background:rgba(5,20,25,.6);padding:3px 8px;border-radius:4px}
 .flowplay{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:10px;font:600 .9rem var(--serif);color:#cfe3ea;background:rgba(5,20,25,.6);border:1px solid var(--line);border-radius:14px;padding:3px 12px;cursor:pointer}
 .cap{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:10px;max-width:62%;text-align:right;font:italic .85rem var(--serif);color:#cfe3ea;background:rgba(5,20,25,.6);padding:3px 8px;border-radius:4px}
@@ -56,8 +60,8 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding-block:0 30px
 @media (max-width:600px){summary{grid-template-columns:1fr}summary .d{white-space:normal}}
 </style>
 <header class="hero">
-<div class="flowbox" id="flowbox"><canvas id="flowcv" aria-label="Animated illustration of water flowing around the NACA 63-815 hydrofoil as the angle of attack rises from 2 to 14 degrees, with pressure colours, separation after stall and cavitation bubbles"></canvas>
-<div class="flowtag" id="flowtag"></div><button type="button" id="flowplay" class="flowplay">Pause</button>
+<div class="flowbox" id="flowbox" tabindex="0" aria-label="Flow illustration: move the cursor across it, drag sideways, or use the left and right arrow keys to change the angle of attack"><canvas id="flowcv" aria-label="Animated illustration of water flowing around the NACA 63-815 hydrofoil as the angle of attack rises from 2 to 14 degrees, with pressure colours, separation after stall and cavitation bubbles"></canvas>
+<div class="flowtag" id="flowtag"></div><span class="hint"><span class="hd">↔ Move the cursor or drag sideways to change the angle</span><span class="hm">↔ Drag sideways to change the angle</span></span><button type="button" id="flowplay" class="flowplay">Pause</button>
 </div>
 <span class="cap">Illustration from my <a href="naca63815-safe-angle-tool.html">safe-angle tool</a>: ideal flow scaled to the OpenFOAM lift and minimum pressure, NACA 63-815, Re 2.49 million</span>
 </header>
@@ -75,7 +79,7 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding-block:0 30px
 </div>
 <main>
 <section><h2>Research experience</h2>
-<details><summary><span class="t">CFD and machine-learning surrogate for the NACA 63-815 tidal-turbine hydrofoil</span><span class="d">2026 – present</span><span class="s">Undergraduate thesis (NAME 400), BUET · Supervisor: Dr. Mir Tareque Ali</span></summary><div class="body"><ul><li>Steady RANS (k–ω SST) simulations in OpenFOAM v14 on a 133,200-cell wall-resolved C-grid (y⁺ &lt; 1) for Re = 0.5–8×10⁶ and α = −10° to 18° in 1° steps, automated with Bash and Python scripts (developed with AI assistance).</li><li>Grid-convergence study; cross-verification against ANSYS Fluent on the same mesh, with lift and cavitation number within 1–2 % in attached flow.</li><li>Validation of pressures, forces and cavitation inception against the cavitation-tunnel measurements of Molland et al. (2004).</li><li>Numerical sensitivity of stall prediction (convection schemes, turbulence wall condition, inflow turbulence, solution path, URANS), including two steady RANS solutions past stall that depend on the iteration path.</li><li>Neural-network surrogate (ensemble of five networks) for lift, drag, moment, stall onset and cavitation inception, with every result carrying its CFD and surrogate uncertainty, and a stall-versus-cavitation design map giving the safe angle of attack for any depth and chord.</li><li>133 further pressure-resolved simulations and a reduced-order model (proper orthogonal decomposition with neural networks) that predicts the full surface pressure distribution and where on the foil cavitation starts.</li><li><a href="naca63815-safe-angle-tool.html">Interactive safe-angle tool</a>: enter the angle, Reynolds number (or speed), chord and depth to get the coefficients with uncertainty, the cavitation verdict, the safe angle, the pressure distribution and the computed OpenFOAM flow field (built with AI assistance).</li><li>The animation above comes from the tool. It is an idealised (potential-flow) picture scaled to the OpenFOAM lift and minimum pressure at Re 2.49 million as the angle rises from 2° to 14°: orange marks separated flow after stall onset, and bubbles mark where the cavitation criterion σ &lt; σ<sub>i</sub> is met at σ = 4. The RANS model itself is single-phase.</li></ul></div></details>
+<details><summary><span class="t">CFD and machine-learning surrogate for the NACA 63-815 tidal-turbine hydrofoil</span><span class="d">2026 – present</span><span class="s">Undergraduate thesis (NAME 400), BUET · Supervisor: Dr. Mir Tareque Ali</span></summary><div class="body"><ul><li>Steady RANS (k–ω SST) simulations in OpenFOAM v14 on a 133,200-cell wall-resolved C-grid (y⁺ &lt; 1) for Re = 0.5–8×10⁶ and α = −10° to 18° in 1° steps, automated with Bash and Python scripts (developed with AI assistance).</li><li>Grid-convergence study; cross-verification against ANSYS Fluent on the same mesh, with lift and cavitation number within 1–2 % in attached flow.</li><li>Validation of pressures, forces and cavitation inception against the cavitation-tunnel measurements of Molland et al. (2004).</li><li>Numerical sensitivity of stall prediction (convection schemes, turbulence wall condition, inflow turbulence, solution path, URANS), including two steady RANS solutions past stall that depend on the iteration path.</li><li>Neural-network surrogate (ensemble of five networks) for lift, drag, moment, stall onset and cavitation inception, with every result carrying its CFD and surrogate uncertainty, and a stall-versus-cavitation design map giving the safe angle of attack for any depth and chord.</li><li>133 further pressure-resolved simulations and a reduced-order model (proper orthogonal decomposition with neural networks) that predicts the full surface pressure distribution and where on the foil cavitation starts.</li><li><a href="naca63815-safe-angle-tool.html">Interactive safe-angle tool</a>: enter the angle, Reynolds number (or speed), chord and depth to get the coefficients with uncertainty, the cavitation verdict, the safe angle, the pressure distribution and the computed OpenFOAM flow field (built with AI assistance).</li><li>The animation above comes from the tool. It is an idealised (potential-flow) picture scaled to the OpenFOAM lift and minimum pressure at Re 2.49 million; move the cursor across it or drag sideways to set the angle between −4° and 16°: orange marks separated flow after stall onset, and bubbles mark where the cavitation criterion σ &lt; σ<sub>i</sub> is met at σ = 4. The RANS model itself is single-phase.</li></ul></div></details>
 
 <details><summary><span class="t">Feasibility of oscillating water column (OWC) wave energy converters for Bangladesh coastal sites</span><span class="d">2026 – present</span><span class="s">Wave energy research, BUET · Supervisor: Dr. Zobair Ibn Awal</span></summary><div class="body"><ul><li>Developed a physics-informed screening model (Gaussian resonance capture efficiency, finite-depth wave power, Wells-turbine and air-compressibility losses) for Cox's Bazar, Saint Martin, Kutubdia and Dublar Char.</li><li>Showed that the submergence ratio generally recommended in the literature is unfavourable under Bangladesh's long-period monsoon waves; estimated 268 MWh/yr annual energy at Cox's Bazar.</li></ul></div></details>
 
@@ -218,15 +222,30 @@ const FLOW = (() => {
   return { set };
 })();
 
-// Operating points: OpenFOAM database, NACA 63-815, Re 2.49 million (alpha, CL, CD, Cp,min); stall onset 9.6 deg
-// (strict 0.2-deg sweep), lift trend CL = 0.6591 + 0.10905 alpha (fit over -4..6 deg); cavitation number fixed at 4.
-const OPS = [[2, 0.8878, 0.01176, -1.103], [6, 1.2972, 0.01578, -1.983], [8, 1.4816, 0.01915, -3.099],
-             [10, 1.6298, 0.02363, -4.465], [12, 1.7389, 0.03192, -5.96], [14, 1.7738, 0.04935, -7.226]];
-let opk = 0;
-function nextOp() { const [a, cl, cd, cp] = OPS[opk++ % OPS.length];
-  FLOW.set({ alpha: a, CL: cl, CD: cd, cpmin: cp, sigma: 4.0, onset: 9.6, CLlin: 0.6591 + 0.10905 * a }); }
-nextOp();
-setInterval(() => { if (!document.hidden && document.getElementById('flowplay').textContent === 'Pause') nextOp(); }, 6000);
+// OpenFOAM database, NACA 63-815, Re 2.49 million: [alpha, CL, CD, Cp,min] in 1-deg steps. Stall onset 9.6 deg
+// (strict 0.2-deg sweep); lift trend CL = 0.6591 + 0.10905 alpha (fit over -4..6 deg); cavitation number fixed at 4.
+const DB = [[-10,-0.4845,0.01388,-6.774],[-9,-0.3702,0.01279,-5.472],[-8,-0.2537,0.01204,-4.271],[-7,-0.1380,0.01140,-3.189],[-6,-0.0223,0.01093,-2.379],[-5,0.0938,0.01055,-1.801],[-4,0.2098,0.01028,-1.296],[-3,0.3247,0.01018,-0.862],[-2,0.4402,0.01018,-0.793],[-1,0.5548,0.01037,-0.868],[0,0.6687,0.01070,-0.945],[1,0.7787,0.01120,-1.023],[2,0.8878,0.01176,-1.103],[3,0.9935,0.01262,-1.189],[4,1.0963,0.01361,-1.301],[5,1.1980,0.01465,-1.534],[6,1.2972,0.01578,-1.983],[7,1.3933,0.01720,-2.507],[8,1.4816,0.01915,-3.099],[9,1.5595,0.02101,-3.757],[10,1.6298,0.02363,-4.465],[11,1.6840,0.02727,-5.185],[12,1.7389,0.03192,-5.960],[13,1.7703,0.03848,-6.657],[14,1.7738,0.04935,-7.226],[15,1.7705,0.06137,-7.765],[16,1.7503,0.07680,-8.176]];
+const A_MIN = -4, A_MAX = 16;
+function setAngle(a) {   // linear interpolation in the database between whole degrees
+  a = Math.max(A_MIN, Math.min(A_MAX, a)); const i = Math.min(DB.length - 2, Math.floor(a + 10)), t = a + 10 - i, L = DB[i], R = DB[i + 1];
+  const f = k => L[k] + t * (R[k] - L[k]);
+  FLOW.set({ alpha: a, CL: f(1), CD: f(2), cpmin: f(3), sigma: 4.0, onset: 9.6, CLlin: 0.6591 + 0.10905 * a }); }
+// automatic tour 2 -> 14 deg; stops while the visitor steers the angle and resumes 12 s after the last touch
+const TOUR = [2, 6, 8, 10, 12, 14]; let tk = 0, lastUser = -1e9, cur = 2;
+setAngle(TOUR[tk++]);
+setInterval(() => { if (document.hidden || document.getElementById('flowplay').textContent !== 'Pause' || performance.now() - lastUser < 12000) return;
+  cur = TOUR[tk++ % TOUR.length]; setAngle(cur); }, 6000);
+// steer: move the mouse across the picture, or drag sideways with a finger (vertical swipes still scroll the page)
+(function () {
+  const box = document.getElementById('flowbox'); let want = null, raf = 0, drag = false;
+  const angleAt = x => { const r = box.getBoundingClientRect(); return A_MIN + (A_MAX - A_MIN) * Math.min(1, Math.max(0, (x - r.left) / r.width)); };
+  function push(x) { want = Math.round(angleAt(x) * 4) / 4; lastUser = performance.now();
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (want !== cur) { cur = want; setAngle(cur); } }); }
+  box.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || drag) push(e.clientX); });
+  box.addEventListener('pointerdown', e => { if (e.target.closest('button,a')) return; drag = true; push(e.clientX); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => box.addEventListener(n, () => { drag = false; }));
+  box.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); lastUser = performance.now(); cur = Math.max(A_MIN, Math.min(A_MAX, cur + (e.key === 'ArrowRight' ? 0.5 : -0.5))); setAngle(cur); } });
+})();
 (function(){
 var b=document.getElementById('copy'),addr='2112035@name.buet.ac.bd';
 b.addEventListener('click',function(){
